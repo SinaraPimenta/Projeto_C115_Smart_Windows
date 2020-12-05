@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Julia, Mariana e Sinara">
+  <meta name="generator" content="Jekyll v4.1.1">
+  <title>Dashboard</title>
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/jumbotron/">
+  <script src="/static/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="/static/jquery-3.5.1.slim.min.js"><\/script>')</script>
+  <script src="/static/bootstrap.bundle.min.js"></script>
+  <link href="/static/jumbotron.css" rel="stylesheet">  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+    .card{
+      background-color: #e3f7fc;
+      border: 10px solid white;
+      padding: 10px;
+    }
+    #rainGraph,#tempGraph,#co2Graph{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%)
+    }
+    .navbar
+    {
+      background-color: #036780;
+    }
+    .barra-superior
+    {
+      color: white;
+    }
+    .barra-superior:hover
+    {
+      color: rgb(0, 0, 0);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md fixed-top" style="height: 44px;">
+    <a class="navbar-brand" href="./"><img src="/static/logo-gray.png" alt="logo" width="50%" height="50%"> </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Barra de navegação -->
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link barra-superior" href="/dashboard/"> Dashboard - Smart Window </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle barra-superior" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">Membros</a>
+          <div class="dropdown-menu" aria-labelledby="dropdown01">
+            <a class="dropdown-item " href="#">Julia Daniele Moreira da Silva </a>
+            <a class="dropdown-item " href="#">Mariana Helena Ines Moreira</a>
+            <a class="dropdown-item " href="#">Sinara Pimenta Medeiros</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Conteúdo da página -->
+  <main role="main">
+    <div class="container">
+        <div >
+          <h4 class="text-center">Variaveis</h4>
+          <div class="card-group">
+            <div class="card" style="width: 300px;">
+              <div class="card-body">
+                <h4 class="card-title text-center"><span style="color:rgb(16, 88, 110,1);">C02</span></h4>
+                <h3 class="card-subtitle text-center mb-2" id="co2"></h3>
+                <script type="text/javascript">
+                  var gasCarbonico = {{ data.co2|tojson }};
+                  document.getElementById('co2').innerHTML = gasCarbonico+' ppm';
+                </script>
+              </div>
+            </div>
+            <div class="card" style="width: 300px;">
+              <div class="card-body">
+                <h4 class="card-title text-center"><span style="color:rgba(70, 165, 191,1);">Chuva</span></h4>
+                <h3 class="card-subtitle text-center mb-2" id="rain"></h3>
+                <script type="text/javascript">
+                  var chuva = {{ data.chuva|tojson }};
+                  document.getElementById('rain').innerHTML = chuva+' %';
+                </script>
+              </div>
+            </div>
+            <div class="card" style="width: 300px;">
+              <div class="card-body">
+                <h4 class="card-title text-center text"><span style="color:rgba(231, 33, 36, 0.87);">Temperatura</span></h4>
+                <h3 class="card-subtitle text-center mb-2" id="temperature"></h3>
+                <script type="text/javascript">
+                  var temperatura = {{ data.temp|tojson }};
+                  document.getElementById('temperature').innerHTML = temperatura+' °C';
+                </script>
+              </div>
+            </div>
+        </div>
+        <br>
+          <div class="card-group">
+            <div class="card" style="width: 300px;height:280px">
+              <canvas id="co2Graph"></canvas>
+              <script type="text/javascript">
+                var arrayCO2 = {{ data.arrayCO2|tojson }};
+                var ctxB = document.getElementById("co2Graph").getContext('2d');
+                var myBarChart = new Chart(ctxB, {
+                type: 'bar',
+                data: {
+                labels: ["January", "February", "March", "April", "May", "June"],
+                datasets: [{
+                label: 'Co2 [ppm]',
+                data: arrayCO2,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)'
+                ],
+                borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 2
+                }]},
+                options: {
+                scales: {
+                yAxes: [{
+                ticks: {
+                beginAtZero: true
+                }}]}}});
+              </script>
+            </div>
+            <div class="card" style="width: 300px; height:280px">
+              <div style="width: 200px;">
+              <canvas id="rainGraph"></canvas>
+              </div>
+              <script type="text/javascript">
+                //var arrayChuva = {{ data.arrayChuva|tojson }};
+                var chuva = {{ data.chuva|tojson }};
+                var ctxD = document.getElementById("rainGraph").getContext('2d');
+                var myLineChart = new Chart(ctxD, {
+                type: 'doughnut',
+                data: {
+                labels: ["Molhado", "Seco"],
+                datasets: [{
+                data: [chuva, 100-chuva],
+                backgroundColor: ['rgba(70, 165, 191)', 'rgba(252, 77, 33,.7)'],
+                hoverBackgroundColor: ['rgba(70, 165, 191, .2)', 'rgba(252, 77, 33, .2)']
+                }]
+                },
+                options: {
+                responsive: true
+                }
+                });
+              </script>
+            </div>
+            <div class="card" style="width: 300px;height:280px">
+              <canvas id="tempGraph"></canvas>
+              <script type="text/javascript">
+                var arrayTemp = {{ data.arrayTemp|tojson }};
+                var ctxL = document.getElementById("tempGraph").getContext('2d');
+                var myLineChart = new Chart(ctxL, {
+                type: 'line',
+                data: {
+                labels: ["January", "February", "March", "April", "May", "June"],
+                datasets: [{
+                label: "Temperatura",
+                data: arrayTemp,
+                backgroundColor: ['rgba(247, 70, 74, .2)',],
+                borderColor: ['rgba(247, 70, 74, .7)',],
+                borderWidth: 2},]},
+                options: {
+                responsive: true
+                }});
+              </script>
+            </div>
+          </div>        
+        <div class="col-xl-2  ">
+          <br><br>
+          <div class="card" style="width: 15rem; height: 30rem;">
+            <div class="card-body">
+              <h5 class="card-title">Estado da Janela</h5>
+              <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </main>
+    <footer class=".container ">
+      <p class="text-center">&copy; JMS Smart Windows (Build 20201205 - 2300)</p>
+    </footer>
+</html>
+  
