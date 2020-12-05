@@ -1,8 +1,9 @@
 import paho.mqtt.client as mqtt
-import time
+import time    
 
 def on_message(client, userdata, message):
     print("received message: " ,str(message.payload.decode("utf-8")))
+    return str(message.payload.decode("utf-8"))  
 
 mqttBroker ="test.mosquitto.org"
 
@@ -11,8 +12,10 @@ client.connect(mqttBroker)
 
 client.loop_start()
 
-client.subscribe("SRS/INATEL/CONTROLE")
+client.subscribe("SRS/INATEL/TEMPERATURE")
 client.on_message=on_message 
 
 time.sleep(30)
 client.loop_stop()
+
+  
