@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="Julia, Mariana e Sinara">
+  <meta name="generator" content="Jekyll v4.1.1">
+  <title>Dashboard</title>
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
+  <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/jumbotron/">
+  <script src="/static/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+  <script>window.jQuery || document.write('<script src="/static/jquery-3.5.1.slim.min.js"><\/script>')</script>
+  <script src="/static/bootstrap.bundle.min.js"></script>
+  <link href="/static/jumbotron.css" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td,th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .c1 {
+      background-color: #333337;
+    }
+    .c2 {
+      background-color: #4D4D50;
+    }
+    .c5 {
+      background-color: #99999B;
+    }
+    .c6 {
+      background-color: crimson;
+    }
+    .form-control {
+      height: 25px;
+    }
+    #label-kp, #label-ki, #label-kd, #label-k,#label-tal, #input-kp, #input-ki, #input-kd,#input-k,#input-tal{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="height: 44px;">
+    <a class="navbar-brand" href="./"><img src="/static/logo-gray.png" alt="logo" width="50%" height="50%"> </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Barra de navegação -->
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/control/"> Dashboard - Smart Window </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">Membros</a>
+          <div class="dropdown-menu" aria-labelledby="dropdown01">
+            <a class="dropdown-item" href="#">Julia Daniele Moreira da Silva </a>
+            <a class="dropdown-item" href="#">Mariana Helena Ines Moreira</a>
+            <a class="dropdown-item" href="#">Sinara Pimenta Medeiros</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Conteúdo da página -->
+  <main role="main">
+    <div class="container">
+      <div class="row" div style="text-align: center;">
+        <div class="col-xl-1 align-center">
+          <form method="GET" action="/control/">
+          <h5 class="text-center">Modo:</h5>
+          <div class="btn-group btn-block btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-primary c1 btn-sm">
+              <input type="radio" name="Modo" value="MA" id="MA" onclick="handleClickM();">MA
+            </label>
+            <label class="btn btn-primary  c2 btn-sm">
+              <input type="radio" name="Modo" value="MF" id="MF" onclick="handleClickM();"> MF
+            </label>
+            <label class="btn btn-primary  c5 btn-sm">
+              <input type="radio" name="Modo" value="PID" id="PID" onclick="handleClickPID();"> PID
+            </label>
+            </br>
+            <label class="btn btn-primary c6 btn-sm">
+              <input type="radio" name="Modo" value="Sint" id="Sint" onclick="handleClickSint();"> Sint
+            </label>
+          </div>
+            <div class="form-group">
+              A1:<input type="text" class="form-control" name="A1" value="0.9930900">
+              B1:<input type="text" class="form-control" name="B1" value="0.0058096">
+              Tempo Amostragem:<input type="text" class="form-control" name="Amostragem" value="0.3">
+              Setpoint:<input type="text" class="form-control" name="SetPoint" value="50">
+              Overshoot MAX:<input type="text" class="form-control" name="Overshoot" value="15">
+              Tempo MAX:<input type="text" class="form-control" name="tempo" value="60">
+              <label id="label-kp" >KP:</label>
+              <input type="text" id="input-kp" class="form-control" name="Proporcional" value="kp">
+              <label id="label-ki" >KI:</label>
+              <input type="text" id="input-ki" class="form-control" name="Integral" value="ki">
+              <label id="label-kd" >KD:</label>
+              <input type="text" id="input-kd" class="form-control" name="Derivativo" value="kd">
+              <label id="label-k" >K:</label>
+              <input type="text" id="input-k" class="form-control" name="k" value="valork">
+              <label id="label-tal" >Tal:</label>
+              <input type="text" id="input-tal" class="form-control" name="tal" value="valortal">
+              <div style="text-align: center;">
+              </div>
+            </br>
+              <div class=".container">
+                <input type="submit" class="text-center btn btn-primary" value="Calcular">
+                <button type="button" onclick="goBack()" class="btn btn-outline-danger">Voltar</button>
+              </div>
+              <script>
+                function goBack() {
+                  window.history.back();
+                }
+              </script>
+            </div>
+        </div>
+        <div class="col-xl-1">
+        </div>
+        <div class="col-xl-8">
+          <h4 class="text-center">Variaveis</h4>
+          <div class="card-group">
+            <div class="card" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">Temperatura</h5>
+                <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+              </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">Chuva</h5>
+                <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+              </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">CO2</h5>
+                <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+              </div>
+            </div>
+        </div>
+        <br>
+          <div class="card-group">
+            <div class="card">
+              <img class="card-img-top" src="..." alt="Card image cap">
+            </div>
+            <div class="card">
+              <img class="card-img-top" src="..." alt="Card image cap">
+            </div>
+            <div class="card">
+              <img class="card-img-top" src="..." alt="Card image cap">
+            </div>
+          </div>
+        </div>
+        </form>
+        <div class="col-xl-2  ">
+          <br><br>
+          <div class="card" style="width: 15rem; height: 30rem;">
+            <div class="card-body">
+              <h5 class="card-title">Estado da Janela</h5>
+              <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <footer class=".container ">
+      <p class="text-center">&copy; JMS Smart Windows (Build 20201205 - 2300)</p>
+    </footer>
+</html>
