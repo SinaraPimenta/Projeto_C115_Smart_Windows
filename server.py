@@ -2,15 +2,15 @@ from flask import Flask,request,send_from_directory
 import os
 from flask import  flash,  redirect, url_for, render_template
 import paho.mqtt.client as mqtt
-import time 
+from datetime import datetime
 import database 
 
 app = Flask(__name__)
 
 #Variáveis globais
-temperatura = '0'
-chuva = '0'
-co2 = '0'
+temperatura = 0
+chuva = 0
+co2 = 0
 
 def on_messageTemp(client, userdata, message):
   print("received messageTemp: " ,str(message.payload.decode("utf-8")))
@@ -45,25 +45,17 @@ def receive():
   client.on_message = on_message
   client.subscribe("SRS/INATEL/#")
 
-#Função para substituição de valores na página html
-def Avaliar(var,value,html):
-  if str(var)!=str(value):
-    html=html.replace(('"'+str(value)+'"'),('"'+str(var)+'"'))
-  return html
-
-@app.route('/')
-def index():
-  return '<h2>Main</h2> <br> redirecting to /control... <meta http-equiv = "refresh" content = "1; url = /control/" />'
-
 @app.route('/dashboard/')
 def control():
   receive()    
   if(temperatura!=0 and chuva!=0 and co2!=0):
-    database.sendDB(temperatura,chuva,co2)
-  temperaturas,chuvas,co2s = database.searchDB()  
+    now = datetime.now()
+    timestamp = datetime.timestamp(now)
+    database.sendDB(temperatura,chuva,co2,timestamp)
+  temperaturas,chuvas,co2s,tempos = database.searchDB() 
   data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'arrayTemp':temperaturas,
-  'arrayChuva':chuvas,'arrayCO2':co2s}
+  'arrayChuva':chuvas,'arrayCO2':co2s,'arrayTempo':tempos}
   return render_template('dashboard.html', data=data)
 
 if __name__ == '__main__':
-  app.run(debug=True)      
+  app.run(debug=True)    
