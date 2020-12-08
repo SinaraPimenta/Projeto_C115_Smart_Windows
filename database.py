@@ -27,6 +27,6 @@ def searchDB():
     chuvas.append(data['chuva'])
     co2s.append(data['co2'])
     data_hora = datetime.fromtimestamp(data['timestamp'])
-    data_hora = data_hora.strftime("%d/%m/%Y %H:%M:%S")
+    data_hora = data_hora.strftime("%d/%m/%Y %H:%M")
     tempos.append(data_hora)
   return temperaturas,chuvas,co2s,tempos

@@ -47,13 +47,11 @@ def receive():
 
 @app.route('/dashboard/')
 def control():
-  receive()    
-  if(temperatura!=0 and chuva!=0 and co2!=0):
-    now = datetime.now()
-    timestamp = datetime.timestamp(now)
-    database.sendDB(temperatura,chuva,co2,timestamp)
+  receive()   
+  now = datetime.now()
+  now = now.strftime("%d/%m/%Y %H:%M")
   temperaturas,chuvas,co2s,tempos = database.searchDB() 
-  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'arrayTemp':temperaturas,
+  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'tempoAgora': now,'arrayTemp':temperaturas,
   'arrayChuva':chuvas,'arrayCO2':co2s,'arrayTempo':tempos}
   return render_template('dashboard.html', data=data)
 

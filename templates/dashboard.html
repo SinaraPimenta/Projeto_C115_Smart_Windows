@@ -55,6 +55,10 @@
       transform: translate(-50%, -50%);
       color: gray;
     }
+    #subtitulo1
+    {
+      color: gray;
+    }
     .navbar
     {
       background-color: #036780;
@@ -99,6 +103,11 @@
     <div class="container">
         <div >
           <h4 class="text-center">Variaveis</h4>
+          <h6 class="text-center" id="subtitulo1">Variaveis</h4>
+          <script>
+            var ultimo_tempo = {{data.tempoAgora|tojson}};
+            document.getElementById('subtitulo1').innerHTML = 'Valores obtidos em: ' + ultimo_tempo;
+          </script>
           <div class="card-group">
             <div class="card" style="width: 300px;">
               <div class="card-body">
@@ -131,6 +140,7 @@
               </div>
             </div>
         </div>
+        <h4 class="text-center">Gráficos</h4>
           <div class="card-group">
             <div class="card" style="width: 300px;height:450px">
               <canvas id="co2Graph"  style="width: 300px;height:380px"></canvas>
@@ -180,10 +190,9 @@
               </div>
               <script type="text/javascript">
                 //var arrayChuva = {{ data.arrayChuva|tojson }};
-                var arrayTempo = {{data.arrayTempo|tojson}};
+                var ultimo_tempo = {{data.tempoAgora|tojson}};
                 var chuva = {{ data.chuva|tojson }};
-                ultimo_tempo = arrayTempo[0];
-                document.getElementById('ultimaMedida').innerHTML = 'Ultima medida em: <br>' + ultimo_tempo;
+                document.getElementById('ultimaMedida').innerHTML = 'Valor obtido em: <br>' + ultimo_tempo;
                 var ctxD = document.getElementById("rainGraph").getContext('2d');
                 var myLineChart = new Chart(ctxD, {
                 type: 'doughnut',
