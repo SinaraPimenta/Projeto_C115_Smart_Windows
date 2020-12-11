@@ -9,10 +9,11 @@ temperaturas = []
 chuvas = []
 co2s = []
 tempos = []
+estados = []
 
 #Função para salvar a amostra no BD
-def sendDB(temperatura,chuva,co2,timestamp):
-  dados = {"temperatura": temperatura, "chuva": chuva, "co2": co2,"timestamp":timestamp}
+def sendDB(temperatura,chuva,co2,timestamp,stateW):
+  dados = {"temperatura": temperatura, "chuva": chuva, "co2": co2,"timestamp":timestamp,"estadoJanela":stateW}
   collection.insert_one(dados)
 
 #Função para retornar as amostras salvas no BD
@@ -21,12 +22,15 @@ def searchDB():
   chuvas.clear()
   co2s.clear()
   tempos.clear()
+  estados.clear()
+
   resposta = collection.find().sort([("timestamp", -1)]).limit(6)  #traz os últimos 6 registros 
   for data in resposta: 
     temperaturas.append(data['temperatura'])
     chuvas.append(data['chuva'])
     co2s.append(data['co2'])
+    estados.append(data['estadoJanela'])
     data_hora = datetime.fromtimestamp(data['timestamp'])
     data_hora = data_hora.strftime("%d/%m/%Y %H:%M")
     tempos.append(data_hora)
-  return temperaturas,chuvas,co2s,tempos
+  return temperaturas,chuvas,co2s,tempos,estados

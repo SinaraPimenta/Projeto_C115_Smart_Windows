@@ -238,8 +238,12 @@
           <br><br>
           <div class="card" style="width: 15rem; height: 30rem;">
             <div class="card-body">
-              <h5 class="card-title">Estado da Janela</h5>
-              <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
+              <h4 class="card-title">Estado da Janela</h4>
+              <h3 class="card-subtitle text-center mb-2" id="state"></h3>
+              <script type="text/javascript">
+                var estado = {{ data.estado|tojson }};
+                document.getElementById('state').innerHTML = estado;
+              </script>
             </div>
           </div>
         </div>

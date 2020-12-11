@@ -11,6 +11,7 @@ app = Flask(__name__)
 temperatura = 0
 chuva = 0
 co2 = 0
+estadoJanela = 0
 
 def on_messageTemp(client, userdata, message):
   print("received messageTemp: " ,str(message.payload.decode("utf-8")))
@@ -30,6 +31,12 @@ def on_messageCO2(client, userdata, message):
   co2 = str(message.payload.decode("utf-8")) 
   co2 = round(float(co2),0)
 
+def on_messageStateW(client, userdata, message):
+  print("received messageStateW: " ,str(message.payload.decode("utf-8")))
+  global estadoJanela
+  estadoJanela = str(message.payload.decode("utf-8")) 
+  estadoJanela = round(float(estadoJanela))
+
 ### topic message
 def on_message(mosq, obj, msg):
   print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
@@ -42,6 +49,7 @@ def receive():
   client.message_callback_add('SRS/INATEL/TEMPERATURE', on_messageTemp)
   client.message_callback_add('SRS/INATEL/RAIN', on_messageRain)
   client.message_callback_add('SRS/INATEL/CO2', on_messageCO2)
+  client.message_callback_add('SRS/INATEL/STATEWINDOW', on_messageStateW)
   client.on_message = on_message
   client.subscribe("SRS/INATEL/#")
 
@@ -50,9 +58,9 @@ def control():
   receive()   
   now = datetime.now()
   now = now.strftime("%d/%m/%Y %H:%M")
-  temperaturas,chuvas,co2s,tempos = database.searchDB() 
-  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'tempoAgora': now,'arrayTemp':temperaturas,
-  'arrayChuva':chuvas,'arrayCO2':co2s,'arrayTempo':tempos}
+  temperaturas,chuvas,co2s,tempos,estados = database.searchDB() 
+  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'tempoAgora': now,'estado':estadoJanela,'arrayTemp':temperaturas,
+  'arrayChuva':chuvas,'arrayCO2':co2s,'arrayTempo':tempos,'arrayEstados':estados}
   return render_template('dashboard.html', data=data)
 
 if __name__ == '__main__':
