@@ -11,7 +11,8 @@ app = Flask(__name__)
 temperatura = 0
 chuva = 0
 co2 = 0
-estadoJanela = 0
+estadoJanela = '0'
+verificacao = '' 
 
 def on_messageTemp(client, userdata, message):
   print("received messageTemp: " ,str(message.payload.decode("utf-8")))
@@ -32,10 +33,14 @@ def on_messageCO2(client, userdata, message):
   co2 = round(float(co2),0)
 
 def on_messageStateW(client, userdata, message):
-  print("received messageStateW: " ,str(message.payload.decode("utf-8")))
+  print("received messageStateW: " , message.payload.decode("utf-8"))
   global estadoJanela
   estadoJanela = str(message.payload.decode("utf-8")) 
-  estadoJanela = round(float(estadoJanela))
+
+def on_messageStateWUsers(client, userdata, message):
+  print("received messageStateWUsers: " , message.payload.decode("utf-8"))
+  global verificacao
+  verificacao = str(message.payload.decode("utf-8")) 
 
 ### topic message
 def on_message(mosq, obj, msg):
@@ -49,17 +54,25 @@ def receive():
   client.message_callback_add('SRS/INATEL/TEMPERATURE', on_messageTemp)
   client.message_callback_add('SRS/INATEL/RAIN', on_messageRain)
   client.message_callback_add('SRS/INATEL/CO2', on_messageCO2)
-  client.message_callback_add('SRS/INATEL/STATEWINDOW', on_messageStateW)
+  client.message_callback_add('SRS/INATEL/STATEWINDOWS', on_messageStateW)
+  client.message_callback_add('SRS/INATEL/STATEWINDOWSUSERS', on_messageStateWUsers)
   client.on_message = on_message
   client.subscribe("SRS/INATEL/#")
 
 @app.route('/dashboard/')
 def control():
-  receive()   
+  receive()
   now = datetime.now()
-  now = now.strftime("%d/%m/%Y %H:%M")
-  temperaturas,chuvas,co2s,tempos,estados = database.searchDB() 
-  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'tempoAgora': now,'estado':estadoJanela,'arrayTemp':temperaturas,
+  now = now.strftime("%d/%m/%Y %H:%M")  
+  temperaturas,chuvas,co2s,tempos,estados = database.searchDB()
+  global verificacao, estadoJanela
+  estado = estadoJanela
+  verifica = verificacao
+  if(verifica == '' or verifica == 'AUTO'):
+    janela = estado
+  else:
+    janela = verifica
+  data = {'temp': temperatura, 'chuva': chuva, 'co2': co2,'tempoAgora': now,'estado':janela,'arrayTemp':temperaturas,
   'arrayChuva':chuvas,'arrayCO2':co2s,'arrayTempo':tempos,'arrayEstados':estados}
   return render_template('dashboard.html', data=data)
 

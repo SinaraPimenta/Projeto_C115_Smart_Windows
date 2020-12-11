@@ -55,7 +55,7 @@
       transform: translate(-50%, -50%);
       color: gray;
     }
-    #subtitulo1
+    #subtitulo1,#subtitulo
     {
       color: gray;
     }
@@ -71,6 +71,18 @@
     .barra-superior:hover
     {
       color: rgb(0, 0, 0);
+    }
+    #windows
+    {
+      float:left;
+      margin-left: 30px;
+    }
+    #windows-txt
+    {
+      margin-top: 80px;
+    }
+    .txt-janela{      
+      color: #0f4c82;
     }
   </style>
 </head>
@@ -101,9 +113,38 @@
   <!-- Conteúdo da página -->
   <main role="main">
     <div class="container">
+        <h4 class="text-center">Estado da Janela</h4>
+        <div >          
+          <div class="card" style="width: 1110px; height: 300px;">            
+            <div class="card-body"> 
+              <div  id="windows">
+              </div>
+              <div id="windows-txt">
+              <h3 class="card-subtitle text-center mb-2 txt-janela" id="state"></h3>
+              <h6 class="text-center txt-janela" id="subtitulo"></h4>
+              </div>
+              <script type="text/javascript">              
+                var ultimo_tempo = {{data.tempoAgora|tojson}};
+                document.getElementById('subtitulo').innerHTML = 'Estado em: ' + ultimo_tempo;
+                var estado = {{ data.estado|tojson }};
+                var janela;
+                if(estado=='0') {
+                  janela='A janela esta fechada';
+                  document.getElementById('windows').innerHTML = '<img src="/static/windows_close.jpg" alt="Janela fechada" height="230px">'
+                }
+                else {
+                  janela='A janela esta aberta';
+                  document.getElementById('windows').innerHTML = '<img src="/static/windows_open.png" alt="Janela aberta" height="200px">'
+                }
+                document.getElementById('state').innerHTML = janela;                
+              </script>
+            </div>
+          </div>
+        </div>
+        <br>
         <div >
           <h4 class="text-center">Variaveis</h4>
-          <h6 class="text-center" id="subtitulo1">Variaveis</h4>
+          <h6 class="text-center" id="subtitulo1"></h4>
           <script>
             var ultimo_tempo = {{data.tempoAgora|tojson}};
             document.getElementById('subtitulo1').innerHTML = 'Valores obtidos em: ' + ultimo_tempo;
@@ -140,6 +181,7 @@
               </div>
             </div>
         </div>
+        <br>
         <h4 class="text-center">Gráficos</h4>
           <div class="card-group">
             <div class="card" style="width: 300px;height:450px">
@@ -234,19 +276,7 @@
               </script>
             </div>
           </div>        
-        <div class="col-xl-2  ">
-          <br><br>
-          <div class="card" style="width: 15rem; height: 30rem;">
-            <div class="card-body">
-              <h4 class="card-title">Estado da Janela</h4>
-              <h3 class="card-subtitle text-center mb-2" id="state"></h3>
-              <script type="text/javascript">
-                var estado = {{ data.estado|tojson }};
-                document.getElementById('state').innerHTML = estado;
-              </script>
-            </div>
-          </div>
-        </div>
+        
 
     </div>
   </main>
